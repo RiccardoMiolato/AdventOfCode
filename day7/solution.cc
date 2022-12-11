@@ -16,7 +16,8 @@ int main(){
 
     print_filesystem(root, 0);
 
-    cout << "Answer should be: " << get_answer_problem_1(root) << endl;
+    cout << "Answer 1 should be: " << get_answer_problem_1(root) << endl;
+    cout << "Answer 2 should be: " << get_answer_problem_2(root) << endl;
 
     return 0;
 }
@@ -29,7 +30,6 @@ void readFileSystem(fileSystem &root){
 
     if(!stream.fail()){
         while(!stream.eof()){
-            cout << line++ << endl;
             stream >> buffer;
 
             if(strcmp(buffer, "$") == 0){

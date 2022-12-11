@@ -23,4 +23,7 @@ int get_folder_size(fileSystem &root);
 //return the result to the part 1 of the problem
 int get_answer_problem_1(fileSystem &root);
 
+//return the result to the part 2 of the problem
+int get_answer_problem_2(fileSystem &root);
+
 #endif

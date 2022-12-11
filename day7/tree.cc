@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const int DISK_SPACE = 70000000;
+
 void init(fileSystem &root){
     root = new folder;
     root->name = "root";
@@ -141,4 +143,33 @@ int get_answer_problem_1(fileSystem &root){
     }
 
     return total;
+}
+
+int recursive_solution(fileSystem root, int space_to_be_clear, int min_size_folder_available){
+    int size = get_folder_size(root);
+
+    if(size >= space_to_be_clear && size <= min_size_folder_available)
+        min_size_folder_available = size;
+    
+    if(root->folders != NULL)
+        min_size_folder_available = recursive_solution(root->folders, space_to_be_clear, min_size_folder_available);
+
+    if(root->next != NULL)
+        min_size_folder_available = recursive_solution(root->next, space_to_be_clear, min_size_folder_available);
+
+    return min_size_folder_available;
+}
+
+int get_answer_problem_2(fileSystem &root){
+    if(root != NULL){
+        fileSystem ptr = root;
+        int size = get_folder_size(ptr);
+        int free_space = DISK_SPACE - size;
+        int space_to_be_clear = 30000000 - free_space;
+        int min_size_folder_available = DISK_SPACE - free_space;
+
+        return recursive_solution(root, space_to_be_clear, min_size_folder_available);
+    }
+
+    return -1;
 }
