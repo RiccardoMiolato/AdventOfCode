@@ -46,4 +46,15 @@ void inrease_cycle(int &cycle, int value, int &strength){
     //part 1
     if(cycle == 20 || (cycle - 20) % 40 == 0)
         strength += cycle * value;
+
+    //part 2
+    int index = cycle - 1;
+
+    if(index % 40 >= value - 1 && index % 40 <= value + 1)
+        cout << '#';
+    else 
+        cout << '.';
+
+    if(cycle % 40 == 0) 
+        cout << endl;
 }
