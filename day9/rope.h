@@ -8,21 +8,19 @@ struct node{
 };
 typedef node* nodeList;
 
-struct head{
-    nodeList nodes;
-};
-
-struct tail{
+struct knot{
     nodeList nodes;
     int nNodesVisited;
+    knot* next;
 };
 
-void init(head *&h, tail *&t);
-void move_head(head *&h, tail *&t, int x, int y);
-void move_tail(head *&h, tail *&t);
+void init(knot *&h, int dim);
+void move_head(knot *&h, int x, int y);
 nodeList get_last(nodeList list);
-bool tail_touches_head(tail *&t, head *&h);
-bool contain_position(tail *&t, int x, int y);
+bool next_touches_prev(knot *&t, knot *&h);
+bool contain_position(knot *&t, int x, int y);
 void print_positions(nodeList list);
+knot* get_tail(knot *head);
+
 
 #endif

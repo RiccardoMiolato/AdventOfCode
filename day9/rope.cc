@@ -4,22 +4,26 @@
 
 using namespace std;
 
-void init(head *&h, tail *&t){
-    h = new head;
-    h->nodes = new node;
-    h->nodes->x = 0;
-    h->nodes->y = 0;
-    h->nodes->next = NULL;
-
-    t = new tail;
-    t->nNodesVisited = 1;
-    t->nodes = new node;
-    t->nodes->x = 0;
-    t->nodes->y = 0;
-    t->nodes->next = NULL;
+void init(knot *&h, int dim){
+    if(dim > 1){
+        h = new knot;
+        h->nodes = new node;
+        h->nodes->x = 0;
+        h->nodes->y = 0;
+        h->nodes->next = NULL;
+        init(h->next, dim - 1);
+    }else if(dim == 1){
+        h = new knot;
+        h->nodes = new node;
+        h->nodes->x = 0;
+        h->nodes->y = 0;
+        h->nodes->next = NULL;
+        h->next = NULL;
+        h->nNodesVisited = 1;
+    }
 }
 
-void move_head(head *&h, tail *&t, int x, int y){
+void move_head(knot *&h, int x, int y){
     nodeList _node = new node;
     _node->x = x;
     _node->y = y;
@@ -28,38 +32,34 @@ void move_head(head *&h, tail *&t, int x, int y){
     nodeList tmp = get_last(h->nodes);
     tmp->next = _node;
 
-    if(!tail_touches_head(t, h))
-        move_tail(h, t);
-}
+    if(h->next != NULL && !next_touches_prev(h->next, h)){
+        nodeList head_pos = get_last(h->nodes);
+        nodeList tail_pos = get_last(h->next->nodes);
 
-void move_tail(head *&h, tail *&t){
-    nodeList head_pos = get_last(h->nodes);
-    nodeList tail_pos = get_last(t->nodes);
-    nodeList new_pos = new node;
-    new_pos->x = tail_pos->x;
-    new_pos->y = tail_pos->y;
-    new_pos->next = NULL;
+        x = tail_pos->x;
+        y = tail_pos->y;
 
-    if(head_pos->x < tail_pos->x - 1){
-        new_pos->x -= 1;
-        new_pos->y = head_pos->y;
-    }else if(head_pos->x > tail_pos->x + 1){
-        new_pos->x += 1;
-        new_pos->y = head_pos->y;
+        if(head_pos->x < tail_pos->x - 1){
+            x -= 1;
+            y = head_pos->y;
+        }else if(head_pos->x > tail_pos->x + 1){
+            x += 1;
+            y = head_pos->y;
+        }
+        
+        if(head_pos->y < tail_pos->y - 1){
+            y -= 1;
+            x = head_pos->x;
+        }else if(head_pos->y > tail_pos->y + 1){
+            y += 1;
+            x = head_pos->x;
+        } 
+        
+        if(h->next->next == NULL && !contain_position(h->next, x, y))
+            h->next->nNodesVisited += 1;
+
+        move_head(h->next, x, y);
     }
-    
-    if(head_pos->y < tail_pos->y - 1){
-        new_pos->y -= 1;
-        new_pos->x = head_pos->x;
-    }else if(head_pos->y > tail_pos->y + 1){
-        new_pos->y += 1;
-        new_pos->x = head_pos->x;
-    } 
-    
-    if(!contain_position(t, new_pos->x, new_pos->y))
-        t->nNodesVisited += 1;
-
-    tail_pos->next = new_pos;
 }
 
 nodeList get_last(nodeList list){
@@ -72,30 +72,21 @@ nodeList get_last(nodeList list){
     return NULL;
 }
 
-void print_positions(nodeList list){
-    int i = 0;
-    while(list != NULL){
-        cout << ++i << " - x: " << list->x << "  |  y: " << list->y << endl;
-        list = list->next;
-    }
-}
+bool next_touches_prev(knot *&next, knot *&prev){
+    nodeList next_pos = get_last(next->nodes);
+    nodeList prev_pos = get_last(prev->nodes);
 
-
-bool tail_touches_head(tail *&t, head *&h){
-    nodeList head_pos = get_last(h->nodes);
-    nodeList tail_pos = get_last(t->nodes);
-
-    if(head_pos->x < tail_pos->x - 1 || head_pos->x > tail_pos->x + 1)
+    if(next_pos->x < prev_pos->x - 1 || next_pos->x > prev_pos->x + 1)
         return false;
 
-    if(head_pos->y < tail_pos->y - 1 || head_pos->y > tail_pos->y + 1)
+    if(next_pos->y < prev_pos->y - 1 || next_pos->y > prev_pos->y + 1)
         return false;
 
     return true;
 }
 
-bool contain_position(tail *&t, int x, int y){
-    nodeList tmp = t->nodes;
+bool contain_position(knot *&h, int x, int y){
+    nodeList tmp = h->nodes;
     bool contains = false;
 
     while(tmp != NULL && !contains){
@@ -106,4 +97,18 @@ bool contain_position(tail *&t, int x, int y){
     }
 
     return contains;
+}
+
+void print_positions(nodeList list){
+    while(list != NULL){
+        cout << "x: " << list->x << "  |  y: " << list->y << endl;
+        list = list->next;
+    }
+}
+
+knot* get_tail(knot *head){
+    while(head->next != NULL)
+        head = head->next;
+
+    return head;
 }
