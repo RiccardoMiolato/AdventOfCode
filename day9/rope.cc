@@ -39,22 +39,20 @@ void move_head(knot *&h, int x, int y){
         x = tail_pos->x;
         y = tail_pos->y;
 
-        if(head_pos->x < tail_pos->x - 1){
+        if(x == head_pos->x || x == head_pos->x + 1 || x == head_pos->x - 1)
+            x = head_pos->x;
+        else if(x > head_pos->x - 2)
             x -= 1;
-            y = head_pos->y;
-        }else if(head_pos->x > tail_pos->x + 1){
+        else
             x += 1;
+
+        if(y == head_pos->y || y == head_pos->y + 1 || y == head_pos->y - 1)
             y = head_pos->y;
-        }
-        
-        if(head_pos->y < tail_pos->y - 1){
+        else if(y > head_pos->y - 2)
             y -= 1;
-            x = head_pos->x;
-        }else if(head_pos->y > tail_pos->y + 1){
+        else
             y += 1;
-            x = head_pos->x;
-        } 
-        
+            
         if(h->next->next == NULL && !contain_position(h->next, x, y))
             h->next->nNodesVisited += 1;
 

@@ -14,21 +14,16 @@ int main(){
     if(stream.fail()){
         cout << "Error opening file" << endl;
     }else{
-        init(h, 2);
+        init(h, 10);
         char buffer_dir[2];
         char buffer_steps[3];
 
         while(!stream.eof()){
             if(stream >> buffer_dir && stream >> buffer_steps){
-                cout << "aa" << endl;
                 move(h, buffer_dir[0], stoi(buffer_steps));
             }
         }
 
-        cout << "HEAD:" << endl;
-        print_positions(h->nodes);
-        cout << "TAIL:" << endl;
-        print_positions(get_tail(h)->nodes);
         cout << "Tail moved " << get_tail(h)->nNodesVisited << " times!" << endl;
     }
 
