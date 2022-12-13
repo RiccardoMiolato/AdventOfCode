@@ -3,7 +3,7 @@
 
 struct item
 {
-    int value;
+    long long int value;
     item* next;
 };
 
@@ -19,7 +19,8 @@ struct monkey
 };
 
 void init(monkey* &_monkey, int id, int test);
-void process_items(monkey* _monkey);
+void process_items_test(monkey* _monkey, int divisor);
+void process_items_puzzle(monkey* _monkey, int divisor);
 void add_item(item* &items, int value);
 void throw_item(monkey* _monkey, item* _item);
 item* get_item(monkey* _monkey);

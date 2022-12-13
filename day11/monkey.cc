@@ -13,7 +13,37 @@ void init(monkey* &_monkey, int id, int test){
     _monkey->false_test = NULL;
 }
 
-void process_items(monkey* _monkey){
+void process_items_test(monkey* _monkey, int divisor){
+    while(_monkey->items != NULL){
+        _monkey->items_processed += 1;
+        item* tmp = get_item(_monkey);
+        switch(_monkey->id){
+            case 0:
+                tmp->value = tmp->value * 19;
+                tmp->value = tmp->value % divisor;
+                break;
+            case 1:
+                tmp->value = tmp->value + 6;
+                break;
+            case 2:
+                tmp->value = tmp->value * tmp->value;
+                tmp->value = tmp->value % divisor;
+                break;
+            case 3:
+                tmp->value = tmp->value + 3;
+                break;
+        }
+
+        //tmp->value = tmp->value / 3;
+        if(tmp->value % _monkey->test == 0){
+            throw_item(_monkey->true_test, tmp);
+        }else{
+            throw_item(_monkey->false_test, tmp);
+        }
+    }
+}
+
+void process_items_puzzle(monkey* _monkey, int divisor){
     while(_monkey->items != NULL){
         _monkey->items_processed += 1;
 
@@ -21,9 +51,11 @@ void process_items(monkey* _monkey){
         switch(_monkey->id){
             case 0:
                 tmp->value = tmp->value * 13;
+                tmp->value = tmp->value % divisor;
                 break;
             case 1:
                 tmp->value = tmp->value * tmp->value;
+                tmp->value = tmp->value % divisor;
                 break;
             case 2:
                 tmp->value = tmp->value + 6;
@@ -42,13 +74,14 @@ void process_items(monkey* _monkey){
                 break;
             case 7:
                 tmp->value = tmp->value * 7;
+                tmp->value = tmp->value % divisor;
                 break;
         }
 
-        tmp->value = tmp->value / 3;
-        if(tmp->value % _monkey->test == 0)
+        //tmp->value = tmp->value / 3;
+        if(tmp->value % _monkey->test == 0){
             throw_item(_monkey->true_test, tmp);
-        else
+        }else
             throw_item(_monkey->false_test, tmp);
     }
 }
