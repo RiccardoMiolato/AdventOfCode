@@ -3,15 +3,20 @@
 
 using namespace std;
 
+const char *filename = "mypuzzle.txt";
+
 int get_lenght(const char *);
 int get_prioritize();
+int get_group_prioritize();
 int get_value(char c);
 bool is_present(const char *, char);
 
 int main(){
     int sum = get_prioritize();
+    int sum2 = get_group_prioritize();
     
     cout << "The answer to part 1 is " << sum << endl;
+    cout << "The answer to part 2 is " << sum2 << endl;
     return 0;
 }
 
@@ -21,7 +26,7 @@ int get_prioritize(){
     bool present;
     int len;
     int sum = 0;
-    stream.open("mypuzzle.txt", ios::in);
+    stream.open(filename, ios::in);
 
     if(!stream.fail()){
         while(!stream.eof()){
@@ -40,6 +45,49 @@ int get_prioritize(){
             cout << endl;
         }
     }
+
+    stream.close();
+    return sum;
+}
+
+int get_group_prioritize(){
+    fstream stream;
+    char **buffer = new char*[3];
+    for(int i = 0; i < 3; i++)
+        buffer[i] = new char[256];
+    bool present;
+    int len;
+    int sum = 0, index = 0;
+    stream.open(filename, ios::in);
+
+    if(!stream.fail()){
+        while(!stream.eof()){
+            cout << "In" << endl;
+            while(index < 3 && stream >> buffer[index]){
+                if(index == 0)
+                    len = get_lenght(buffer[index]);
+
+                index++;
+            }
+            cout << "Out" << endl;
+
+            present = false;
+            for(int i = 0; i < len && !present && index == 3; i++)
+                if(is_present(buffer[1], buffer[0][i]) && is_present(buffer[2], buffer[0][i])){
+                    present = true;
+                    cout << " - " << buffer[0][i] << " : " << get_value(buffer[0][i]);
+                    sum += get_value(buffer[0][i]);
+                }
+            
+            cout << " --> " << sum << endl;
+            index = 0;
+        }
+    }
+
+    for(int i = 0; i < 3; i++)
+        delete[] buffer[i];
+
+    delete buffer;
 
     stream.close();
     return sum;
