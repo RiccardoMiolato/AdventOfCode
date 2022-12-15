@@ -5,17 +5,17 @@ using namespace std;
 
 const char *filename = "mypuzzle.txt";
 
-int count_overlapping();
+int count_fully_contained();
 bool is_contained(int startA, int endA, int startB, int endB);
 
 int main(){
-    int total_overlaps = count_overlapping();
+    int total_overlaps = count_fully_contained();
     
     cout << "The answer to part 1 is " << total_overlaps << endl;
     return 0;
 }
 
-int count_overlapping(){
+int count_fully_contained(){
     fstream stream;
     char buffer[16];
     int indexes[4] = {0,0,0,0}, index = 0;
