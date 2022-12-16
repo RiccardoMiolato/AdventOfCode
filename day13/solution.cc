@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include "tree.h"
+#include "treeList.h"
 
 using namespace std;
 
@@ -11,14 +12,37 @@ void build_tree(tree &, const char *);
 const char *filename = "mypuzzle.txt";
 
 int main(){
+    init();
     int sum_ordered_indexes = read_file();
+    int ind2 = -1, ind6 = -1;
+
+    printList();
+
+    tree t2;
+    tree t6;
+
+    init(t2);
+    init(t6);
+
+    build_tree(t2, "[[2]]");
+    build_tree(t6, "[[6]]");
+
+    add_element(t2);
+    add_element(t6);
+
+    printList();
+
+    ind2 = get_index_of(t2);
+    ind6 = get_index_of(t6);
 
     cout << "Answer to part 1 is " << sum_ordered_indexes << endl;
+    cout << "Answer to part 2 is (" << ind2 << '*' << ind6 << " = " << (ind2 * ind6) << ')' << endl;
+
+    deinit();
     return 0;
 }
 
 int read_file(){
-    tree root1, root2;
     fstream stream;
     char buffer1[256];
     char buffer2[256];
@@ -27,6 +51,7 @@ int read_file(){
 
     if(!stream.fail()){
         while(!stream.eof()){
+            tree root1, root2;
             stream.getline(buffer1, 256);
             if(strlen(buffer1) == 0 && !stream.eof())
                 stream.getline(buffer1, 256);
@@ -41,6 +66,9 @@ int read_file(){
             build_tree(root1, buffer1);
             build_tree(root2, buffer2);
 
+            add_element(root1);
+            add_element(root2);
+            
             cout << "== Pair " << line << " ==";
             int cmp = compare(root1, root2);
             if(cmp == 1){
@@ -55,8 +83,6 @@ int read_file(){
                 index_sum += line;
             }
             cout << endl;
-            deinit(root1);
-            deinit(root2);
 
             line++;
         }
