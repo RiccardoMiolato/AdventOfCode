@@ -18,9 +18,18 @@ int main(){
     printCave();
 
     int answer1 = sandFall();
+    cout << "Falling sands" << endl;
+    printCave();
+
+    expandCave();
+    printCave();
+
+    int answer2 = answer1 + 1 + sandFall();
+    cout << "Falling sands" << endl;
     printCave();
 
     cout << "\nAnswer part 1 is " << answer1 << " sand units" << endl;
+    cout << "\nAnswer part 2 is " << answer2 << " sand units" << endl;
     deinitCave();
     
     return 0;

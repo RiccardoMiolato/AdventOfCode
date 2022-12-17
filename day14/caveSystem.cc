@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "list.h"
 #include "caveSystem.h"
 
@@ -107,7 +108,11 @@ bool recursiveSandFall(int y, int x){
         return recursiveSandFall(y + 1, x + 1);
     else{
         caveMap[y][x] = 2;
-        return true;
+
+        if(y == 0)
+            return false;
+        else
+            return true;
     }
 }
 
@@ -116,10 +121,39 @@ int sandFall(){
 
     while(recursiveSandFall(0, 500 - diffX)){
         sandunits++;
-        cout << endl << "Sands = " << sandunits << endl;
     }
 
     return sandunits;
+}
+
+void expandCave(){
+    int **newMap;
+    int old_cols = cols, startIndex;
+
+    int new_rows = rows + 2;
+    newMap = new int*[new_rows];
+
+    cols = 2 * ceil(new_rows * sqrt(2));
+    startIndex = (cols - old_cols) / 2;
+
+    for(int i = 0; i < new_rows; i++){
+        newMap[i] = new int[cols];
+
+        for(int j = 0; j < cols; j++){
+            if(i == new_rows - 1)
+                newMap[i][j] = 1;
+            else if(i == new_rows - 2 || j < startIndex || j >= startIndex + old_cols)
+                newMap[i][j] = 0;
+            else{
+                newMap[i][j] = caveMap[i][j - startIndex];
+            }
+        }
+    }
+
+    deinitCave();
+    diffX -= startIndex;
+    rows = new_rows;
+    caveMap = newMap;
 }
 
 void deinitCave(){
