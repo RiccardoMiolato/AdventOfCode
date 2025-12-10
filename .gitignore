@@ -34,3 +34,7 @@
 *.txt
 
 **/input.txt
+
+.venv
+**/venv
+**/.venv
